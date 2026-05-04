@@ -1,0 +1,2034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alkira Professional Services Calculator</title>
+<style>
+  :root {
+    --alkira-blue: #0057B8;
+    --alkira-dark: #003A7D;
+    --alkira-light: #E8F0FB;
+    --alkira-accent: #00A3E0;
+    --alkira-green: #00B493;
+    --gray-100: #F7F8FA;
+    --gray-200: #EAECF0;
+    --gray-400: #9AA3B2;
+    --gray-600: #5A6478;
+    --gray-900: #1A2333;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+    --shadow-lg: 0 8px 32px rgba(0,0,0,0.13);
+    --radius: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: var(--gray-100);
+    color: var(--gray-900);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .app-header {
+    background: linear-gradient(135deg, var(--alkira-dark) 0%, var(--alkira-blue) 100%);
+    color: #fff;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 70px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-md);
+  }
+  .app-header .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .app-header .logo-mark {
+    width: 38px;
+    height: 38px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    font-weight: 900;
+    letter-spacing: -1px;
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.35);
+  }
+  .app-header .app-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  .app-header .app-subtitle {
+    font-size: 12px;
+    opacity: 0.75;
+    font-weight: 400;
+    margin-top: 2px;
+  }
+  .header-actions { display: flex; gap: 10px; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.18s ease;
+  }
+  .btn-primary {
+    background: var(--alkira-accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: #0091c8; transform: translateY(-1px); }
+  .btn-outline {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.35);
+  }
+  .btn-outline:hover { background: rgba(255,255,255,0.22); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--alkira-blue);
+    border: 1px solid var(--gray-200);
+  }
+  .btn-ghost:hover { background: var(--alkira-light); }
+  .btn-success {
+    background: var(--alkira-green);
+    color: #fff;
+  }
+  .btn-success:hover { background: #009a7d; }
+  .btn-print {
+    background: var(--alkira-dark);
+    color: #fff;
+  }
+  .btn-print:hover { background: #002a5c; }
+
+  /* ── TABS ── */
+  .view-tabs {
+    display: flex;
+    background: #fff;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 0 40px;
+    box-shadow: var(--shadow-sm);
+  }
+  .view-tab {
+    padding: 14px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-400);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.18s;
+    user-select: none;
+  }
+  .view-tab:hover { color: var(--alkira-blue); }
+  .view-tab.active {
+    color: var(--alkira-blue);
+    border-bottom-color: var(--alkira-blue);
+  }
+
+  /* ── LAYOUT ── */
+  .app-body {
+    display: flex;
+    gap: 24px;
+    padding: 30px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .services-panel { flex: 1; min-width: 0; }
+  .summary-panel {
+    width: 320px;
+    flex-shrink: 0;
+    position: sticky;
+    top: 90px;
+    align-self: flex-start;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+    cursor: pointer;
+    user-select: none;
+  }
+  .card-header:hover { background: var(--alkira-light); }
+  .section-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-num {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--alkira-blue);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .section-subtitle {
+    font-size: 11px;
+    color: var(--gray-400);
+    margin-top: 1px;
+  }
+  .section-toggle {
+    color: var(--gray-400);
+    font-size: 18px;
+    transition: transform 0.2s;
+    line-height: 1;
+  }
+  .section-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .section-count {
+    font-size: 12px;
+    color: var(--gray-400);
+    font-weight: 500;
+  }
+  .select-all-btn {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--alkira-blue);
+    background: var(--alkira-light);
+    border: none;
+    border-radius: 5px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .select-all-btn:hover { background: #cfe0f7; }
+  .card-body { padding: 0; }
+
+  /* ── SERVICE ROWS ── */
+  .service-row {
+    display: flex;
+    align-items: center;
+    padding: 13px 20px;
+    border-bottom: 1px solid var(--gray-200);
+    transition: background 0.12s;
+    gap: 14px;
+  }
+  .service-row:last-child { border-bottom: none; }
+  .service-row:hover { background: var(--gray-100); }
+  .service-row.selected { background: #EBF4FF; }
+  .service-row.selected:hover { background: #daeafc; }
+
+  .service-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--gray-400);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s;
+    background: #fff;
+  }
+  .service-row.selected .service-checkbox {
+    background: var(--alkira-blue);
+    border-color: var(--alkira-blue);
+  }
+  .service-checkbox svg { display: none; }
+  .service-row.selected .service-checkbox svg { display: block; }
+
+  .service-info { flex: 1; min-width: 0; }
+  .service-id {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--alkira-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 2px;
+  }
+  .service-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-900);
+  }
+  .service-desc {
+    font-size: 12px;
+    color: var(--gray-600);
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+  /* ── SIZE PICKER ── */
+  .size-picker {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .size-btn {
+    padding: 5px 9px;
+    border-radius: 6px;
+    border: 1.5px solid var(--gray-200);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    background: #fff;
+    color: var(--gray-400);
+    transition: all 0.15s;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+  .size-btn:hover { border-color: var(--alkira-blue); color: var(--alkira-blue); background: var(--alkira-light); }
+  .size-btn.size-s.active  { background: #00B493; color: #fff; border-color: #00B493; }
+  .size-btn.size-m.active  { background: #0057B8; color: #fff; border-color: #0057B8; }
+  .size-btn.size-l.active  { background: #7B3FE4; color: #fff; border-color: #7B3FE4; }
+  .size-btn.size-xl.active { background: #D9500A; color: #fff; border-color: #D9500A; }
+  .size-btn.size-c.active  { background: #5A6478; color: #fff; border-color: #5A6478; }
+  .custom-hrs-input {
+    width: 58px;
+    padding: 5px 7px;
+    border: 1.5px solid var(--alkira-blue);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: center;
+    outline: none;
+    color: var(--gray-900);
+  }
+
+  /* ── SIZE LEGEND ── */
+  .size-legend {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 40px;
+    background: #fff;
+    border-bottom: 1px solid var(--gray-200);
+    flex-wrap: wrap;
+  }
+  .legend-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--gray-400);
+    flex-shrink: 0;
+  }
+  .legend-items { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .legend-item { display: flex; align-items: center; gap: 6px; }
+  .legend-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3px 8px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    min-width: 28px;
+  }
+  .legend-badge.s  { background: #00B493; }
+  .legend-badge.m  { background: #0057B8; }
+  .legend-badge.l  { background: #7B3FE4; }
+  .legend-badge.xl { background: #D9500A; }
+  .legend-badge.c  { background: #5A6478; }
+  .legend-text { font-size: 12px; color: var(--gray-600); }
+  .legend-text strong { color: var(--gray-900); }
+
+  /* ── SUMMARY PANEL ── */
+  .summary-card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+  }
+  .summary-header {
+    background: linear-gradient(135deg, var(--alkira-dark), var(--alkira-blue));
+    color: #fff;
+    padding: 18px 20px;
+  }
+  .summary-title {
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    opacity: 0.85;
+  }
+  .summary-body { padding: 20px; }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label {
+    font-size: 13px;
+    color: var(--gray-600);
+    font-weight: 500;
+  }
+  .stat-value {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gray-900);
+  }
+  .stat-value.highlight { color: var(--alkira-blue); }
+  .stat-value.total { font-size: 20px; color: var(--alkira-green); }
+
+  .rate-section {
+    background: var(--gray-100);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 14px 0;
+  }
+  .rate-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gray-600);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .rate-input-wrap {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 2px solid var(--gray-200);
+    border-radius: 7px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+  .rate-input-wrap:focus-within { border-color: var(--alkira-blue); }
+  .rate-prefix {
+    padding: 10px 12px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--alkira-blue);
+    background: var(--alkira-light);
+    border-right: 1px solid var(--gray-200);
+  }
+  .rate-input {
+    flex: 1;
+    padding: 10px 14px;
+    font-size: 18px;
+    font-weight: 700;
+    border: none;
+    outline: none;
+    color: var(--gray-900);
+    background: transparent;
+    width: 100%;
+  }
+  .rate-suffix {
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--gray-400);
+    font-weight: 500;
+  }
+
+  .total-block {
+    background: linear-gradient(135deg, var(--alkira-dark), var(--alkira-blue));
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    color: #fff;
+    margin-top: 6px;
+  }
+  .total-label-sm { font-size: 11px; font-weight: 600; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.08em; }
+  .total-amount { font-size: 32px; font-weight: 800; margin-top: 4px; letter-spacing: -0.02em; }
+  .total-sub { font-size: 12px; opacity: 0.7; margin-top: 4px; }
+
+  .generate-btn { width: 100%; margin-top: 14px; justify-content: center; font-size: 14px; padding: 13px; border-radius: 8px; }
+
+  /* ── QUOTE VIEW ── */
+  #quote-view { display: none; }
+  .quote-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .quote-actions-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius);
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .quote-actions-title { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+  .quote-actions-sub { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+
+  /* The printable quote */
+  .quote-doc {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+  }
+  .quote-top-bar {
+    background: linear-gradient(135deg, var(--alkira-dark), var(--alkira-blue));
+    height: 8px;
+  }
+  .quote-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 36px 40px 28px;
+    border-bottom: 1px solid var(--gray-200);
+    gap: 20px;
+  }
+  .quote-logo-area {
+    flex-shrink: 0;
+  }
+  .logo-upload-box {
+    width: 200px;
+    height: 80px;
+    border: 2px dashed var(--gray-400);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.18s;
+    background: var(--gray-100);
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+  .logo-upload-box:hover { border-color: var(--alkira-blue); background: var(--alkira-light); }
+  .logo-upload-box input[type=file] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    font-size: 0;
+  }
+  .logo-upload-icon { font-size: 22px; opacity: 0.5; }
+  .logo-upload-text { font-size: 11px; color: var(--gray-400); font-weight: 600; text-align: center; }
+  .logo-preview-img {
+    max-width: 196px;
+    max-height: 76px;
+    object-fit: contain;
+    display: none;
+    border-radius: 6px;
+  }
+
+  .quote-title-block { text-align: right; }
+  .quote-doc-title { font-size: 28px; font-weight: 800; color: var(--alkira-dark); letter-spacing: -0.02em; }
+  .quote-doc-subtitle { font-size: 13px; color: var(--gray-400); margin-top: 4px; }
+  .quote-meta { font-size: 13px; color: var(--gray-600); margin-top: 10px; line-height: 1.7; }
+  .quote-meta span { font-weight: 600; color: var(--gray-900); }
+
+  /* Customer info fields */
+  .customer-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 28px 40px;
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--gray-100);
+  }
+  .field-group { display: flex; flex-direction: column; gap: 5px; }
+  .field-group.full { grid-column: 1 / -1; }
+  .field-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--gray-400);
+  }
+  .field-input {
+    padding: 9px 13px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gray-900);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+    width: 100%;
+  }
+  .field-input:focus {
+    border-color: var(--alkira-blue);
+    box-shadow: 0 0 0 3px rgba(0,87,184,0.12);
+  }
+  .field-input::placeholder { color: var(--gray-400); }
+
+  .customer-info-title {
+    grid-column: 1 / -1;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--alkira-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding-bottom: 4px;
+    border-bottom: 2px solid var(--alkira-light);
+  }
+
+  /* Services table */
+  .quote-services { padding: 28px 40px; }
+  .quote-section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--alkira-blue);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 14px;
+  }
+  .services-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .services-table thead tr {
+    background: var(--alkira-dark);
+    color: #fff;
+  }
+  .services-table th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .services-table th:last-child { text-align: right; }
+  .services-table td {
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: top;
+  }
+  .services-table td:last-child { text-align: right; font-weight: 700; }
+  .services-table tbody tr:nth-child(even) { background: var(--gray-100); }
+  .services-table tbody tr:hover { background: var(--alkira-light); }
+  .services-table .section-divider td {
+    background: var(--alkira-dark);
+    color: #fff;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 7px 14px;
+    border: none;
+  }
+  .services-table .section-divider td:last-child { text-align: left; }
+  .td-id { font-size: 11px; font-weight: 700; color: var(--alkira-blue); white-space: nowrap; }
+  .td-name { font-weight: 600; }
+  .td-desc { font-size: 12px; color: var(--gray-600); margin-top: 2px; }
+  .td-hours { color: var(--alkira-blue); white-space: nowrap; }
+  .td-cost { color: var(--gray-900); white-space: nowrap; }
+
+  .no-services-msg {
+    text-align: center;
+    padding: 40px;
+    color: var(--gray-400);
+    font-size: 14px;
+  }
+
+  /* Quote totals */
+  .quote-totals {
+    padding: 0 40px 32px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  .totals-table {
+    width: 320px;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .totals-table td {
+    padding: 8px 14px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .totals-table td:last-child { text-align: right; font-weight: 700; }
+  .totals-table .grand-total td {
+    background: var(--alkira-dark);
+    color: #fff;
+    font-size: 16px;
+    font-weight: 800;
+    border-radius: 0;
+    border: none;
+  }
+  .totals-table .grand-total td:first-child { border-radius: 8px 0 0 8px; }
+  .totals-table .grand-total td:last-child { border-radius: 0 8px 8px 0; }
+
+  .quote-footer {
+    background: var(--gray-100);
+    border-top: 1px solid var(--gray-200);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .quote-footer-text { font-size: 12px; color: var(--gray-400); line-height: 1.6; max-width: 400px; }
+  .quote-footer-brand { font-size: 16px; font-weight: 800; color: var(--alkira-blue); }
+
+  .quote-bottom-bar {
+    background: linear-gradient(135deg, var(--alkira-dark), var(--alkira-blue));
+    height: 6px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 60px 40px;
+    color: var(--gray-400);
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-title { font-size: 18px; font-weight: 700; color: var(--gray-600); margin-bottom: 6px; }
+  .empty-sub { font-size: 14px; }
+
+  /* ── SOW DOCUMENT ── */
+  #sow-view { display: none; }
+  .sow-doc {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--gray-200);
+    overflow: hidden;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .sow-parties {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .sow-party {
+    padding: 24px 32px;
+  }
+  .sow-party:first-child { border-right: 1px solid var(--gray-200); }
+  .sow-party-label {
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--alkira-blue);
+    margin-bottom: 10px;
+  }
+  .sow-party-field { font-size: 13px; color: var(--gray-600); line-height: 1.8; }
+  .sow-party-field strong { color: var(--gray-900); display: block; font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+
+  .sow-body { padding: 32px; }
+  .sow-section { margin-bottom: 32px; }
+  .sow-section-title {
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--alkira-blue);
+    border-bottom: 2px solid var(--alkira-light);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+  .sow-section-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    background: var(--alkira-blue);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    font-weight: 800;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  .sow-prose { font-size: 13px; color: var(--gray-600); line-height: 1.7; }
+
+  .sow-service-block {
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .sow-service-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--gray-100);
+    border-bottom: 1px solid var(--gray-200);
+    gap: 12px;
+  }
+  .sow-service-id { font-size: 11px; font-weight: 800; color: var(--alkira-blue); }
+  .sow-service-name { font-size: 14px; font-weight: 700; color: var(--gray-900); flex: 1; }
+  .sow-size-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 5px;
+    color: #fff;
+    white-space: nowrap;
+  }
+  .sow-service-body { padding: 14px 16px; }
+  .sow-service-desc { font-size: 13px; color: var(--gray-600); margin-bottom: 10px; line-height: 1.5; }
+  .sow-deliverables-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-400); margin-bottom: 6px; }
+  .sow-deliverables { list-style: none; padding: 0; margin: 0; }
+  .sow-deliverables li {
+    font-size: 12.5px;
+    color: var(--gray-600);
+    padding: 4px 0 4px 18px;
+    position: relative;
+    line-height: 1.4;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .sow-deliverables li:last-child { border-bottom: none; }
+  .sow-deliverables li::before { content: '✓'; position: absolute; left: 0; color: var(--alkira-green); font-weight: 800; font-size: 11px; top: 5px; }
+  .sow-hours-badge {
+    float: right;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--alkira-blue);
+    background: var(--alkira-light);
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-left: 8px;
+  }
+
+  .sow-terms-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .sow-terms-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: top;
+  }
+  .sow-terms-table tr:last-child td { border-bottom: none; }
+  .sow-terms-table td:first-child { font-weight: 700; color: var(--gray-900); width: 35%; background: var(--gray-100); }
+  .sow-terms-table td:last-child { color: var(--gray-600); }
+  .sow-terms-table .sow-grand-total td { background: var(--alkira-dark); color: #fff; font-size: 15px; font-weight: 800; }
+
+  .sow-assumptions { padding: 0; margin: 0; list-style: none; }
+  .sow-assumptions li {
+    font-size: 13px;
+    color: var(--gray-600);
+    padding: 6px 0 6px 20px;
+    position: relative;
+    border-bottom: 1px solid var(--gray-200);
+    line-height: 1.4;
+  }
+  .sow-assumptions li:last-child { border-bottom: none; }
+  .sow-assumptions li::before { content: '•'; position: absolute; left: 4px; color: var(--alkira-blue); font-weight: 800; }
+
+  .sow-sig-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-top: 8px;
+  }
+  .sow-sig-block { padding: 16px; border: 1px solid var(--gray-200); border-radius: 8px; }
+  .sow-sig-role { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--alkira-blue); margin-bottom: 10px; }
+  .sow-sig-line { border-bottom: 1px solid var(--gray-400); margin: 28px 0 6px; }
+  .sow-sig-label { font-size: 11px; color: var(--gray-400); }
+
+  /* Print */
+  @media print {
+    .app-header, .view-tabs, .quote-actions-bar, .sow-actions-bar { display: none !important; }
+    body { background: #fff; }
+    .app-body { padding: 0; }
+    #calc-view { display: none !important; }
+    #quote-view { display: block !important; }
+    #sow-view { display: block !important; }
+    .quote-doc, .sow-doc { box-shadow: none; border: none; }
+    .field-input { border: 1px solid #ccc; }
+    .logo-upload-box { display: none; }
+    .logo-preview-img { display: block !important; }
+    .sow-service-block { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="app-header">
+  <div class="logo-area">
+    <div class="logo-mark">A</div>
+    <div>
+      <div class="app-title">Alkira Professional Services</div>
+      <div class="app-subtitle">Services Calculator &amp; Quote Generator</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" onclick="clearAll()">⟳ Reset</button>
+    <button class="btn btn-primary" onclick="showTab('quote')">Generate Quote →</button>
+    <button class="btn btn-primary" style="background:#7B3FE4" onclick="showTab('sow')">Generate SOW →</button>
+  </div>
+</header>
+
+<!-- ── TABS ── -->
+<div class="view-tabs">
+  <div class="view-tab active" id="tab-calc" onclick="showTab('calc')">📋 Services Calculator</div>
+  <div class="view-tab" id="tab-quote" onclick="showTab('quote')">📄 Quote Preview</div>
+  <div class="view-tab" id="tab-sow" onclick="showTab('sow')">📝 Statement of Work</div>
+</div>
+
+<!-- ══════════ CALCULATOR VIEW ══════════ -->
+<div id="calc-view">
+
+  <!-- Size Legend -->
+  <div class="size-legend">
+    <span class="legend-title">Size Guide:</span>
+    <div class="legend-items">
+      <div class="legend-item"><span class="legend-badge s">S</span><span class="legend-text"><strong>Small</strong> = 10 hrs</span></div>
+      <div class="legend-item"><span class="legend-badge m">M</span><span class="legend-text"><strong>Medium</strong> = 20 hrs</span></div>
+      <div class="legend-item"><span class="legend-badge l">L</span><span class="legend-text"><strong>Large</strong> = 40 hrs</span></div>
+      <div class="legend-item"><span class="legend-badge xl">XL</span><span class="legend-text"><strong>Extra Large</strong> = 60 hrs</span></div>
+      <div class="legend-item"><span class="legend-badge c">C</span><span class="legend-text"><strong>Custom</strong> = Inputted by user</span></div>
+    </div>
+  </div>
+
+  <div class="app-body">
+    <!-- LEFT: Services -->
+    <div class="services-panel">
+
+      <!-- Section 1 -->
+      <div class="card" id="section-1">
+        <div class="card-header" onclick="toggleSection('s1')">
+          <div class="section-badge">
+            <div class="section-num">1</div>
+            <div>
+              <div class="section-title">Pre-Alkira Implementation Services</div>
+              <div class="section-subtitle">Foundation services for successful deployments</div>
+            </div>
+          </div>
+          <div class="section-meta">
+            <span class="section-count" id="count-s1">0 / 2 selected</span>
+            <button class="select-all-btn" onclick="toggleSelectAll('s1', event)">Select All</button>
+            <span class="section-toggle" id="toggle-s1">▾</span>
+          </div>
+        </div>
+        <div class="card-body" id="body-s1">
+          <div class="service-row" data-id="1.1" data-section="s1" data-name="Compliance-Driven Network Design" data-desc="Network and security architectures aligned to regulatory requirements (SOC 2, ISO, PCI, HIPAA)" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info">
+              <div class="service-id">1.1</div>
+              <div class="service-name">Compliance-Driven Network Design</div>
+              <div class="service-desc">Network and security architectures aligned to SOC 2, ISO, PCI, HIPAA</div>
+            </div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="1.2" data-section="s1" data-name="Network Modernization Assessment" data-desc="Current-state assessment and phased Alkira-based modernization roadmap" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info">
+              <div class="service-id">1.2</div>
+              <div class="service-name">Network Modernization Assessment</div>
+              <div class="service-desc">Current-state assessment and phased Alkira-based modernization roadmap</div>
+            </div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2 -->
+      <div class="card" id="section-2">
+        <div class="card-header" onclick="toggleSection('s2')">
+          <div class="section-badge">
+            <div class="section-num">2</div>
+            <div>
+              <div class="section-title">Backbone-as-a-Service (BaaS)</div>
+              <div class="section-subtitle">High-performance cloud-native global backbone services</div>
+            </div>
+          </div>
+          <div class="section-meta">
+            <span class="section-count" id="count-s2">0 / 14 selected</span>
+            <button class="select-all-btn" onclick="toggleSelectAll('s2', event)">Select All</button>
+            <span class="section-toggle" id="toggle-s2">▾</span>
+          </div>
+        </div>
+        <div class="card-body" id="body-s2">
+          <div class="service-row" data-id="2.1" data-section="s2" data-name="Backbone Architecture & Design" data-desc="Resilient, high-performance global backbone design aligned to business and connectivity requirements" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.1</div><div class="service-name">Backbone Architecture &amp; Design</div><div class="service-desc">Resilient, high-performance global backbone design aligned to business and connectivity requirements</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.2" data-section="s2" data-name="Backbone Deployment & Configuration" data-desc="Deploy and configure Alkira backbone across regions for secure, scalable connectivity" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.2</div><div class="service-name">Backbone Deployment &amp; Configuration</div><div class="service-desc">Deploy and configure Alkira backbone across regions for secure, scalable connectivity</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.3" data-section="s2" data-name="Performance Optimization & Validation" data-desc="Validate and optimize backbone performance for predictable latency, resilience, and application experience" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.3</div><div class="service-name">Performance Optimization &amp; Validation</div><div class="service-desc">Validate and optimize backbone performance for predictable latency, resilience, and application experience</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.4" data-section="s2" data-name="Operational Enablement" data-desc="Knowledge transfer and training for operations teams to manage and scale the Alkira backbone" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.4</div><div class="service-name">Operational Enablement</div><div class="service-desc">Knowledge transfer and training for operations teams to manage and scale the Alkira backbone</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.5" data-section="s2" data-name="Internet-Facing Application Policies" data-desc="Secure ingress and egress policies for Internet-facing applications using Alkira-integrated services" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.5</div><div class="service-name">Internet-Facing Application Policies</div><div class="service-desc">Secure ingress and egress policies for Internet-facing applications using Alkira-integrated services</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.6" data-section="s2" data-name="SD-WAN Integration & Policy" data-desc="Integrate SD-WAN with Alkira to unify routing, segmentation, and security policies across WAN and cloud" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.6</div><div class="service-name">SD-WAN Integration &amp; Policy</div><div class="service-desc">Integrate SD-WAN with Alkira to unify routing, segmentation, and security policies across WAN and cloud</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.7" data-section="s2" data-name="Network Segmentation" data-desc="Consistent segmentation across the backbone to reduce risk and enforce policy across cloud and on-prem" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.7</div><div class="service-name">Network Segmentation</div><div class="service-desc">Consistent segmentation across the backbone to reduce risk and enforce policy across cloud and on-prem</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.8" data-section="s2" data-name="Compliance-Driven Network Design (BaaS)" data-desc="Network and security architectures aligned to SOC 2, ISO, PCI, HIPAA within backbone architecture" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.8</div><div class="service-name">Compliance-Driven Network Design (BaaS)</div><div class="service-desc">Network and security architectures aligned to SOC 2, ISO, PCI, HIPAA within backbone architecture</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.9" data-section="s2" data-name="AWS Direct Connect Configuration" data-desc="Design and implement AWS Direct Connect integration with Alkira for secure, high-performance private cloud access" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.9</div><div class="service-name">AWS Direct Connect Configuration</div><div class="service-desc">Design and implement AWS Direct Connect integration for secure, high-performance private cloud access</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.10" data-section="s2" data-name="Azure ExpressRoute Configuration" data-desc="Design and integrate Azure ExpressRoute with Alkira to simplify hybrid connectivity and improve performance" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.10</div><div class="service-name">Azure ExpressRoute Configuration</div><div class="service-desc">Design and integrate Azure ExpressRoute with Alkira to simplify hybrid connectivity and improve performance</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.11" data-section="s2" data-name="Google Interconnect Integration" data-desc="Integrate Google Cloud Interconnect with Alkira for scalable, low-latency connectivity into GCP environments" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.11</div><div class="service-name">Google Interconnect Integration</div><div class="service-desc">Integrate Google Cloud Interconnect with Alkira for scalable, low-latency connectivity into GCP</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.12" data-section="s2" data-name="IPsec VPN Configuration" data-desc="Deploy secure IPsec connectivity using Alkira to connect sites, partners, and cloud environments" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.12</div><div class="service-name">IPsec VPN Configuration</div><div class="service-desc">Deploy secure IPsec connectivity using Alkira to connect sites, partners, and cloud environments</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.13" data-section="s2" data-name="Global Network Latency Optimization" data-desc="Optimize global traffic paths to reduce latency and improve application performance across multinational networks" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.13</div><div class="service-name">Global Network Latency Optimization</div><div class="service-desc">Optimize global traffic paths to reduce latency and improve application performance across multinational networks</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="2.14" data-section="s2" data-name="Landing Zone Elimination" data-desc="Redesign cloud network architecture to eliminate unnecessary landing zones, reducing cost and latency" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">2.14</div><div class="service-name">Landing Zone Elimination</div><div class="service-desc">Redesign cloud network architecture to eliminate unnecessary landing zones, reducing cost and latency</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3 -->
+      <div class="card" id="section-3">
+        <div class="card-header" onclick="toggleSection('s3')">
+          <div class="section-badge">
+            <div class="section-num">3</div>
+            <div>
+              <div class="section-title">Multi-Cloud Networking (MCN)</div>
+              <div class="section-subtitle">Unified connectivity across AWS, Azure, GCP, and on-prem</div>
+            </div>
+          </div>
+          <div class="section-meta">
+            <span class="section-count" id="count-s3">0 / 5 selected</span>
+            <button class="select-all-btn" onclick="toggleSelectAll('s3', event)">Select All</button>
+            <span class="section-toggle" id="toggle-s3">▾</span>
+          </div>
+        </div>
+        <div class="card-body" id="body-s3">
+          <div class="service-row" data-id="3.1" data-section="s3" data-name="IPsec VPN Configuration (MCN)" data-desc="Establish secure connectivity between sites, partners, and multi-cloud environments using Alkira-managed IPsec" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">3.1</div><div class="service-name">IPsec VPN Configuration (MCN)</div><div class="service-desc">Establish secure connectivity between sites, partners, and multi-cloud environments using Alkira-managed IPsec</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="3.2" data-section="s3" data-name="Compliance-Driven Network Design (MCN)" data-desc="Multi-cloud network architectures aligned to regulatory requirements with consistent policy enforcement" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">3.2</div><div class="service-name">Compliance-Driven Network Design (MCN)</div><div class="service-desc">Multi-cloud network architectures aligned to regulatory requirements with consistent policy enforcement</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="3.3" data-section="s3" data-name="AWS Direct Connect Configuration (MCN)" data-desc="Enable secure, private AWS connectivity within a multi-cloud architecture using Alkira-integrated Direct Connect" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">3.3</div><div class="service-name">AWS Direct Connect Configuration (MCN)</div><div class="service-desc">Enable secure, private AWS connectivity within a multi-cloud architecture using Alkira-integrated Direct Connect</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="3.4" data-section="s3" data-name="Azure ExpressRoute Configuration (MCN)" data-desc="Integrate Azure ExpressRoute into a unified multi-cloud network using Alkira for simplified connectivity" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">3.4</div><div class="service-name">Azure ExpressRoute Configuration (MCN)</div><div class="service-desc">Integrate Azure ExpressRoute into a unified multi-cloud network using Alkira for simplified connectivity</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="3.5" data-section="s3" data-name="Google Interconnect Integration (MCN)" data-desc="Connect Google Cloud into a consistent multi-cloud architecture using Alkira for performance and operational simplicity" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">3.5</div><div class="service-name">Google Interconnect Integration (MCN)</div><div class="service-desc">Connect Google Cloud into a consistent multi-cloud architecture for performance and operational simplicity</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4 -->
+      <div class="card" id="section-4">
+        <div class="card-header" onclick="toggleSection('s4')">
+          <div class="section-badge">
+            <div class="section-num">4</div>
+            <div>
+              <div class="section-title">Network &amp; Security Insertion</div>
+              <div class="section-subtitle">NGFW, load balancing, DDI, and security service consolidation</div>
+            </div>
+          </div>
+          <div class="section-meta">
+            <span class="section-count" id="count-s4">0 / 6 selected</span>
+            <button class="select-all-btn" onclick="toggleSelectAll('s4', event)">Select All</button>
+            <span class="section-toggle" id="toggle-s4">▾</span>
+          </div>
+        </div>
+        <div class="card-body" id="body-s4">
+          <div class="service-row" data-id="4.1" data-section="s4" data-name="Firewall - Insertion & Policy (VNF)" data-desc="Insert and scale next-generation firewalls without network redesign to centralize security policy" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">4.1</div><div class="service-name">Firewall – Insertion &amp; Policy (VNF)</div><div class="service-desc">Insert and scale next-generation firewalls without network redesign to centralize security policy</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="4.2" data-section="s4" data-name="Load Balancer Insertion & Policy (VNF)" data-desc="Deploy and integrate load balancer VNFs to improve application availability, scalability, and traffic control" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">4.2</div><div class="service-name">Load Balancer Insertion &amp; Policy (VNF)</div><div class="service-desc">Deploy and integrate load balancer VNFs to improve application availability, scalability, and traffic control</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="4.3" data-section="s4" data-name="DDI Services Insertion & Policy (VNF)" data-desc="Centralize DNS, DHCP, and IPAM services using policy-driven architecture for improved visibility" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">4.3</div><div class="service-name">DDI Services Insertion &amp; Policy (VNF)</div><div class="service-desc">Centralize DNS, DHCP, and IPAM services using policy-driven architecture for improved visibility</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="4.4" data-section="s4" data-name="SD-WAN Consolidation & Re-Aggregation" data-desc="Consolidate multiple SD-WAN environments into a unified Alkira-based architecture to reduce cost" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">4.4</div><div class="service-name">SD-WAN Consolidation &amp; Re-Aggregation</div><div class="service-desc">Consolidate multiple SD-WAN environments into a unified Alkira-based architecture to reduce cost</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="4.5" data-section="s4" data-name="Prisma Access Migration" data-desc="Assess, migrate, and replace Prisma Access with a simplified, cost-optimized Alkira-based architecture" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">4.5</div><div class="service-name">Prisma Access Migration</div><div class="service-desc">Assess, migrate, and replace Prisma Access with a simplified, cost-optimized Alkira-based architecture</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="4.6" data-section="s4" data-name="Zscaler Migration" data-desc="Transition from Zscaler to a modern Alkira-based access architecture to lower costs and improve performance" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">4.6</div><div class="service-name">Zscaler Migration</div><div class="service-desc">Transition from Zscaler to a modern Alkira-based access architecture to lower costs and improve performance</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5 -->
+      <div class="card" id="section-5">
+        <div class="card-header" onclick="toggleSection('s5')">
+          <div class="section-badge">
+            <div class="section-num">5</div>
+            <div>
+              <div class="section-title">M&amp;A / B2B Extranet</div>
+              <div class="section-subtitle">Rapid, secure onboarding of acquired companies and partners</div>
+            </div>
+          </div>
+          <div class="section-meta">
+            <span class="section-count" id="count-s5">0 / 2 selected</span>
+            <button class="select-all-btn" onclick="toggleSelectAll('s5', event)">Select All</button>
+            <span class="section-toggle" id="toggle-s5">▾</span>
+          </div>
+        </div>
+        <div class="card-body" id="body-s5">
+          <div class="service-row" data-id="5.1" data-section="s5" data-name="M&A Network Integration" data-desc="Rapidly connect and secure parent and acquired networks with minimal disruption using Alkira" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">5.1</div><div class="service-name">M&amp;A Network Integration</div><div class="service-desc">Rapidly connect and secure parent and acquired networks with minimal disruption using Alkira</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+          <div class="service-row" data-id="5.2" data-section="s5" data-name="Network Segmentation (Extranet)" data-desc="Consistent network segmentation across cloud and on-prem to reduce attack surface and simplify compliance" data-size="S" onclick="toggleService(this)">
+            <div class="service-checkbox"><svg width="12" height="10" viewBox="0 0 12 10" fill="none"><path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+            <div class="service-info"><div class="service-id">5.2</div><div class="service-name">Network Segmentation (Extranet)</div><div class="service-desc">Consistent network segmentation across cloud and on-prem to reduce attack surface and simplify compliance</div></div>
+            <div class="size-picker" onclick="event.stopPropagation()">
+              <button class="size-btn size-s active" data-size="S" onclick="setSize(this.closest('.service-row'),'S',event)" title="Small – 10 hrs">S</button>
+              <button class="size-btn size-m" data-size="M" onclick="setSize(this.closest('.service-row'),'M',event)" title="Medium – 20 hrs">M</button>
+              <button class="size-btn size-l" data-size="L" onclick="setSize(this.closest('.service-row'),'L',event)" title="Large – 40 hrs">L</button>
+              <button class="size-btn size-xl" data-size="XL" onclick="setSize(this.closest('.service-row'),'XL',event)" title="Extra Large – 60 hrs">XL</button>
+              <button class="size-btn size-c" data-size="C" onclick="setSize(this.closest('.service-row'),'C',event)" title="Custom – enter hours">Custom</button>
+              <input class="custom-hrs-input" type="number" min="1" value="10" style="display:none" oninput="updateSummary()" onclick="event.stopPropagation()">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /services-panel -->
+
+    <!-- RIGHT: Summary -->
+    <div class="summary-panel">
+      <div class="summary-card">
+        <div class="summary-header">
+          <div class="summary-title">📊 Estimate Summary</div>
+        </div>
+        <div class="summary-body">
+          <div class="stat-row">
+            <span class="stat-label">Services Selected</span>
+            <span class="stat-value highlight" id="stat-count">0</span>
+          </div>
+
+          <div class="stat-row">
+            <span class="stat-label">Total Hours</span>
+            <span class="stat-value highlight" id="stat-hours">0 hrs</span>
+          </div>
+
+          <div class="rate-section">
+            <div class="rate-label">Hourly Rate (USD)</div>
+            <div class="rate-input-wrap">
+              <div class="rate-prefix">$</div>
+              <input class="rate-input" type="number" id="hourly-rate" value="200" min="0" step="25" oninput="updateSummary()" placeholder="200">
+              <div class="rate-suffix">/hr</div>
+            </div>
+          </div>
+
+          <div class="total-block">
+            <div class="total-label-sm">Estimated Total</div>
+            <div class="total-amount" id="stat-total">$0</div>
+            <div class="total-sub" id="stat-total-sub">Select services above to calculate</div>
+          </div>
+
+          <button class="btn btn-success generate-btn" onclick="showTab('quote')">
+            Generate Quote →
+          </button>
+          <button class="btn generate-btn" style="background:#7B3FE4;color:#fff;margin-top:8px" onclick="showTab('sow')">
+            Generate SOW →
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /app-body -->
+</div><!-- /calc-view -->
+
+
+<!-- ══════════ QUOTE VIEW ══════════ -->
+<div id="quote-view">
+  <div class="app-body" style="display:block; padding:24px 40px;">
+    <div class="quote-container">
+
+      <div class="quote-actions-bar">
+        <div>
+          <div class="quote-actions-title">Quote Preview</div>
+          <div class="quote-actions-sub">Fill in customer details, upload your logo, then print or save as PDF</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-ghost" onclick="showTab('calc')">← Back to Calculator</button>
+          <button class="btn btn-print" onclick="window.print()">🖨 Print / Save PDF</button>
+        </div>
+      </div>
+
+      <div class="quote-doc" id="quote-document">
+        <div class="quote-top-bar"></div>
+
+        <!-- Quote header: logo + title -->
+        <div class="quote-header">
+          <div class="quote-logo-area">
+            <div class="logo-upload-box" id="logo-box" title="Click to upload your logo">
+              <input type="file" id="logo-file-input" accept="image/*" onchange="handleLogoUpload(event)">
+              <div class="logo-upload-icon">🏢</div>
+              <div class="logo-upload-text">Click to upload logo<br>(PNG, JPG, SVG)</div>
+            </div>
+            <img class="logo-preview-img" id="logo-preview" src="" alt="Company Logo">
+          </div>
+          <div class="quote-title-block">
+            <div class="quote-doc-title">Professional Services Quote</div>
+            <div class="quote-doc-subtitle">Alkira Network &amp; Security Modernization</div>
+            <div class="quote-meta">
+              Quote #: <span id="q-number">--</span><br>
+              Date: <span id="q-date">--</span><br>
+              Valid for: <span>30 days</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customer contact information -->
+        <div class="customer-section">
+          <div class="customer-info-title">📋 Customer &amp; Quote Information</div>
+
+          <div class="field-group">
+            <label class="field-label">Company Name</label>
+            <input class="field-input" type="text" id="f-company" placeholder="Acme Corporation">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Contact Name</label>
+            <input class="field-input" type="text" id="f-contact" placeholder="Jane Smith">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Title / Role</label>
+            <input class="field-input" type="text" id="f-title" placeholder="VP of Network Engineering">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Email Address</label>
+            <input class="field-input" type="email" id="f-email" placeholder="jane.smith@company.com">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Phone Number</label>
+            <input class="field-input" type="tel" id="f-phone" placeholder="+1 (555) 000-0000">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Quote Number</label>
+            <input class="field-input" type="text" id="f-quotenum" placeholder="Q-2026-001" oninput="document.getElementById('q-number').textContent=this.value||'--'">
+          </div>
+          <div class="field-group full">
+            <label class="field-label">Company Address</label>
+            <input class="field-input" type="text" id="f-address" placeholder="123 Main Street, Suite 400, San Jose, CA 95110">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Prepared By (Partner)</label>
+            <input class="field-input" type="text" id="f-preparedby" placeholder="Partner Company Name">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Partner Contact</label>
+            <input class="field-input" type="text" id="f-partnercontact" placeholder="Partner Rep Name &amp; Email">
+          </div>
+        </div>
+
+        <!-- Services table -->
+        <div class="quote-services">
+          <div class="quote-section-title">Selected Professional Services</div>
+          <div id="quote-services-content">
+            <div class="no-services-msg">
+              <div style="font-size:36px;margin-bottom:12px;">📋</div>
+              <div style="font-weight:700;font-size:15px;color:#5A6478;margin-bottom:6px;">No services selected</div>
+              <div>Go back to the Calculator tab and select the services you'd like to include.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Totals -->
+        <div class="quote-totals">
+          <table class="totals-table" id="quote-totals-table" style="display:none">
+            <tr>
+              <td>Services Selected</td>
+              <td id="qt-count">0</td>
+            </tr>
+            <tr>
+              <td>Total Hours</td>
+              <td id="qt-hours">0 hrs</td>
+            </tr>
+            <tr>
+              <td>Hourly Rate</td>
+              <td id="qt-rate">$0 / hr</td>
+            </tr>
+            <tr class="grand-total">
+              <td>💰 Estimated Total</td>
+              <td id="qt-total">$0</td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- Footer -->
+        <div class="quote-footer">
+          <div class="quote-footer-text">
+            This quote is valid for 30 days from the date of issue. All services are estimated at 10 hours each. Final scope and pricing subject to SOW review. Alkira Professional Services are partner-delivered.
+          </div>
+          <div>
+            <div class="quote-footer-brand">alkira</div>
+            <div style="font-size:11px;color:#9AA3B2;margin-top:2px;">Network Infrastructure as a Service</div>
+          </div>
+        </div>
+        <div class="quote-bottom-bar"></div>
+      </div>
+
+    </div>
+  </div>
+</div><!-- /quote-view -->
+
+
+<!-- ══════════ SOW VIEW ══════════ -->
+<div id="sow-view">
+  <div class="app-body" style="display:block; padding:24px 40px;">
+    <div class="quote-container">
+
+      <div class="quote-actions-bar sow-actions-bar">
+        <div>
+          <div class="quote-actions-title">Statement of Work Preview</div>
+          <div class="quote-actions-sub">Customer info is shared with the Quote tab — fill that in first, then print or save as PDF</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn btn-ghost" onclick="showTab('calc')">← Back to Calculator</button>
+          <button class="btn btn-ghost" onclick="showTab('quote')">📄 View Quote</button>
+          <button class="btn btn-print" onclick="window.print()">🖨 Print / Save PDF</button>
+        </div>
+      </div>
+
+      <div class="sow-doc" id="sow-document">
+        <div class="quote-top-bar"></div>
+
+        <!-- SOW Header -->
+        <div class="quote-header">
+          <div class="quote-logo-area">
+            <div class="logo-upload-box" id="sow-logo-box" title="Click to upload your logo">
+              <input type="file" accept="image/*" onchange="handleSowLogoUpload(event)">
+              <div class="logo-upload-icon">🏢</div>
+              <div class="logo-upload-text">Click to upload logo<br>(PNG, JPG, SVG)</div>
+            </div>
+            <img class="logo-preview-img" id="sow-logo-preview" src="" alt="Company Logo">
+          </div>
+          <div class="quote-title-block">
+            <div class="quote-doc-title">Statement of Work</div>
+            <div class="quote-doc-subtitle">Alkira Network &amp; Security Modernization Services</div>
+            <div class="quote-meta">
+              SOW #: <span id="sow-number">--</span><br>
+              Effective Date: <span id="sow-date">--</span><br>
+              Status: <span style="color:var(--alkira-green);font-weight:700">Draft</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Parties -->
+        <div class="sow-parties">
+          <div class="sow-party">
+            <div class="sow-party-label">Client / Customer</div>
+            <div class="sow-party-field">
+              <strong id="sow-company">—</strong>
+              <span id="sow-contact-name">—</span><br>
+              <span id="sow-contact-title"></span><br>
+              <span id="sow-contact-email"></span><br>
+              <span id="sow-contact-phone"></span><br>
+              <span id="sow-contact-address"></span>
+            </div>
+          </div>
+          <div class="sow-party">
+            <div class="sow-party-label">Service Provider / Partner</div>
+            <div class="sow-party-field">
+              <strong id="sow-partner">—</strong>
+              <span id="sow-partner-contact">—</span><br>
+              <span style="color:var(--alkira-blue);font-weight:600">Alkira Partner Network</span><br>
+              <span style="font-size:12px;">Network &amp; Security Modernization Services</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sow-body" id="sow-body-content">
+          <!-- Rendered by renderSOW() -->
+        </div>
+
+        <div class="quote-footer">
+          <div class="quote-footer-text">
+            This Statement of Work is subject to the terms and conditions of the Master Services Agreement between the parties. All work shall be performed on a time-and-materials basis unless otherwise agreed in writing.
+          </div>
+          <div>
+            <div class="quote-footer-brand">alkira</div>
+            <div style="font-size:11px;color:#9AA3B2;margin-top:2px;">Network Infrastructure as a Service</div>
+          </div>
+        </div>
+        <div class="quote-bottom-bar"></div>
+      </div>
+
+    </div>
+  </div>
+</div><!-- /sow-view -->
+
+
+<script>
+  // ── Deliverables per service ──
+  const DELIVERABLES = {
+    '1.1': ['Network and security design aligned to compliance frameworks (SOC 2, ISO, PCI, HIPAA)', 'Segmentation, logging, and control enforcement', 'Documentation to support audits'],
+    '1.2': ['Current-state architecture and cost analysis', 'Gap assessment against cloud and security best practices', 'Future-state Alkira-based modernization roadmap'],
+    '2.1': ['Backbone architecture diagram', 'Traffic flow and resiliency design', 'Capacity and scalability plan'],
+    '2.2': ['Deployed Alkira Backbone as a Service', 'Configuration documentation', 'Deployment validation report'],
+    '2.3': ['Performance baseline report', 'Optimization recommendations', 'Final acceptance sign-off'],
+    '2.4': ['Knowledge transfer sessions for operations and network teams', 'Overview of Alkira portal, monitoring, and change workflows', 'Best practices documentation for scaling and ongoing optimization'],
+    '2.5': ['Ingress and egress policy design', 'Integration with firewall and load balancer services', 'Resiliency and security validation report'],
+    '2.6': ['SD-WAN integration with Alkira', 'Centralized routing and security policy definition', 'Traffic steering and segmentation alignment documentation'],
+    '2.7': ['Logical segmentation design across cloud and on-prem', 'Policy definition and enforcement', 'Validation and documentation'],
+    '2.8': ['Network and security design aligned to compliance frameworks (SOC 2, ISO, PCI, HIPAA) within BaaS architecture', 'Segmentation, logging, and control enforcement', 'Documentation to support audits'],
+    '2.9': ['AWS Direct Connect design and configuration', 'High availability and redundancy setup', 'Routing and traffic validation report'],
+    '2.10': ['Azure ExpressRoute design and implementation', 'Integration with Alkira routing and segmentation', 'Validation and operational handoff'],
+    '2.11': ['Google Interconnect design and onboarding', 'Integration with Alkira Cloud Area Networking', 'Routing, policy, and resiliency validation'],
+    '2.12': ['IPsec tunnel design and configuration', 'Encryption and routing policy setup', 'Redundancy and failover validation'],
+    '2.13': ['Global traffic path optimization using Alkira hubs', 'Regional aggregation and optimized cloud on-ramps', 'Latency analysis and performance validation report'],
+    '2.14': ['Identification of redundant or inefficient landing zones', 'Network re-design to enable direct, secure application access', 'Migration and validation planning'],
+    '3.1': ['IPsec tunnel design and configuration for multi-cloud environments', 'Encryption and routing policy setup', 'Redundancy and failover validation'],
+    '3.2': ['Multi-cloud network and security design aligned to compliance frameworks', 'Segmentation, logging, and control enforcement across environments', 'Documentation to support audits'],
+    '3.3': ['AWS Direct Connect design and configuration within multi-cloud architecture', 'High availability and redundancy setup', 'Routing and traffic validation report'],
+    '3.4': ['Azure ExpressRoute design and implementation within unified multi-cloud network', 'Integration with Alkira routing and segmentation', 'Validation and operational handoff'],
+    '3.5': ['Google Interconnect design and onboarding within multi-cloud architecture', 'Integration with Alkira Cloud Area Networking', 'Routing, policy, and resiliency validation'],
+    '4.1': ['Next-generation firewall insertion without network redesign', 'Traffic steering and policy enforcement configuration', 'High availability and scale design'],
+    '4.2': ['Load balancer VNF insertion and configuration', 'L4/L7 policies, health checks, and traffic steering', 'Integration with segmentation and security services'],
+    '4.3': ['Centralized DDI architecture design', 'Policy-driven DNS, DHCP, and IPAM configuration', 'Migration and operational handoff'],
+    '4.4': ['Assessment of existing SD-WAN vendors and architectures', 'Consolidation into a unified Alkira-based network fabric', 'Re-aggregation of regional and global traffic flows'],
+    '4.5': ['Current-state assessment of Prisma Access environments', 'Migration design leveraging Alkira Network Infrastructure-as-a-Service', 'Cutover execution and decommissioning plan'],
+    '4.6': ['Zscaler dependency assessment and exit strategy', 'Secure access redesign using Alkira-based architectures', 'Migration, validation, and user cutover'],
+    '5.1': ['Rapid connectivity between parent and acquired environments', 'Temporary and permanent segmentation models', 'Secure cutover and migration planning'],
+    '5.2': ['Logical segmentation design across cloud and on-prem', 'Policy definition and enforcement', 'Validation and documentation']
+  };
+
+  // ── Size map ──
+  const SIZE_MAP   = { S: 10, M: 20, L: 40, XL: 60 };
+  const SIZE_LABEL = { S: 'Small (10 hrs)', M: 'Medium (20 hrs)', L: 'Large (40 hrs)', XL: 'Extra Large (60 hrs)', C: 'Custom' };
+  const sections   = { s1:{total:2}, s2:{total:14}, s3:{total:5}, s4:{total:6}, s5:{total:2} };
+
+  // ── Get hours for a row ──
+  function getServiceHours(row) {
+    const size = row.dataset.size || 'S';
+    if (size === 'C') {
+      const inp = row.querySelector('.custom-hrs-input');
+      return parseFloat(inp ? inp.value : 0) || 0;
+    }
+    return SIZE_MAP[size] || 10;
+  }
+
+  // ── Set size on a row ──
+  function setSize(row, size, event) {
+    event.stopPropagation();
+    row.dataset.size = size;
+    row.querySelectorAll('.size-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.size === size);
+    });
+    const inp = row.querySelector('.custom-hrs-input');
+    if (inp) inp.style.display = size === 'C' ? '' : 'none';
+    updateSummary();
+  }
+
+  // Set today's date
+  document.getElementById('q-date').textContent = new Date().toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  document.getElementById('f-quotenum').value = 'Q-' + new Date().getFullYear() + '-001';
+  document.getElementById('q-number').textContent = document.getElementById('f-quotenum').value;
+
+  // ── Tab switching ──
+  function showTab(tab) {
+    document.getElementById('calc-view').style.display  = tab === 'calc'  ? 'block' : 'none';
+    document.getElementById('quote-view').style.display = tab === 'quote' ? 'block' : 'none';
+    document.getElementById('sow-view').style.display   = tab === 'sow'   ? 'block' : 'none';
+    document.getElementById('tab-calc').classList.toggle('active',  tab === 'calc');
+    document.getElementById('tab-quote').classList.toggle('active', tab === 'quote');
+    document.getElementById('tab-sow').classList.toggle('active',   tab === 'sow');
+    if (tab === 'quote') renderQuote();
+    if (tab === 'sow')   renderSOW();
+  }
+
+  // ── Toggle service selection ──
+  function toggleService(row) {
+    row.classList.toggle('selected');
+    updateSummary();
+  }
+
+  // ── Section collapse ──
+  function toggleSection(id) {
+    const body = document.getElementById('body-' + id);
+    const toggle = document.getElementById('toggle-' + id);
+    const isHidden = body.style.display === 'none';
+    body.style.display = isHidden ? '' : 'none';
+    toggle.textContent = isHidden ? '▾' : '▸';
+  }
+
+  // ── Select all for a section ──
+  function toggleSelectAll(sectionId, event) {
+    event.stopPropagation();
+    const rows = document.querySelectorAll(`[data-section="${sectionId}"]`);
+    const allSelected = [...rows].every(r => r.classList.contains('selected'));
+    rows.forEach(r => {
+      if (allSelected) r.classList.remove('selected');
+      else r.classList.add('selected');
+    });
+    updateSummary();
+  }
+
+  // ── Update summary panel ──
+  function updateSummary() {
+    const selected = [...document.querySelectorAll('.service-row.selected')];
+    const count = selected.length;
+    let totalHours = 0;
+    selected.forEach(r => totalHours += getServiceHours(r));
+    const rate = parseFloat(document.getElementById('hourly-rate').value) || 0;
+    const total = totalHours * rate;
+
+    document.getElementById('stat-count').textContent = count;
+    document.getElementById('stat-hours').textContent = totalHours.toLocaleString() + ' hrs';
+    document.getElementById('stat-total').textContent = '$' + total.toLocaleString('en-US', {minimumFractionDigits:0, maximumFractionDigits:0});
+    document.getElementById('stat-total-sub').textContent = count > 0
+      ? totalHours.toLocaleString() + ' total hrs × $' + rate.toLocaleString() + '/hr'
+      : 'Select services above to calculate';
+
+    // Section counts
+    Object.keys(sections).forEach(sid => {
+      const sRows = document.querySelectorAll(`[data-section="${sid}"]`);
+      const sSel = [...sRows].filter(r => r.classList.contains('selected')).length;
+      const el = document.getElementById('count-' + sid);
+      if (el) el.textContent = sSel + ' / ' + sections[sid].total + ' selected';
+    });
+  }
+
+  // ── Render quote ──
+  function renderQuote() {
+    const selected = [...document.querySelectorAll('.service-row.selected')];
+    const rate = parseFloat(document.getElementById('hourly-rate').value) || 0;
+    const count = selected.length;
+    let totalHours = 0;
+    selected.forEach(r => totalHours += getServiceHours(r));
+    const total = totalHours * rate;
+
+    const container = document.getElementById('quote-services-content');
+    const totalsTable = document.getElementById('quote-totals-table');
+
+    if (count === 0) {
+      container.innerHTML = `<div class="no-services-msg"><div style="font-size:36px;margin-bottom:12px;">📋</div><div style="font-weight:700;font-size:15px;color:#5A6478;margin-bottom:6px;">No services selected</div><div>Go back to the Calculator tab and select the services you'd like to include.</div></div>`;
+      totalsTable.style.display = 'none';
+      return;
+    }
+
+    const sectionMap = {
+      '1': { name: '1. Pre-Alkira Implementation Services', rows: [] },
+      '2': { name: '2. Backbone-as-a-Service (BaaS)', rows: [] },
+      '3': { name: '3. Multi-Cloud Networking (MCN)', rows: [] },
+      '4': { name: '4. Network & Security Insertion', rows: [] },
+      '5': { name: '5. M&A / B2B Extranet', rows: [] },
+    };
+    selected.forEach(row => {
+      const sec = row.dataset.id.split('.')[0];
+      if (sectionMap[sec]) sectionMap[sec].rows.push(row);
+    });
+
+    let html = '<table class="services-table"><thead><tr><th style="width:60px">ID</th><th>Service</th><th style="width:90px;text-align:center">Size</th><th style="width:70px;text-align:right">Hours</th><th style="width:110px;text-align:right">Est. Cost</th></tr></thead><tbody>';
+
+    Object.entries(sectionMap).forEach(([secNum, sec]) => {
+      if (sec.rows.length === 0) return;
+      html += `<tr class="section-divider"><td colspan="5">${sec.name}</td></tr>`;
+      sec.rows.forEach(row => {
+        const size = row.dataset.size || 'S';
+        const hrs = getServiceHours(row);
+        const sizeLabel = SIZE_LABEL[size] || size;
+        const svcCost = hrs * rate;
+        html += `<tr>
+          <td><span class="td-id">${row.dataset.id}</span></td>
+          <td><div class="td-name">${escHtml(row.dataset.name)}</div><div class="td-desc">${escHtml(row.dataset.desc)}</div></td>
+          <td style="text-align:center"><span style="font-size:11px;font-weight:700;padding:2px 8px;border-radius:4px;color:#fff;background:${sizeBgColor(size)}">${sizeLabel}</span></td>
+          <td class="td-hours">${hrs} hrs</td>
+          <td class="td-cost">${fmtCurrency(svcCost)}</td>
+        </tr>`;
+      });
+    });
+
+    html += '</tbody></table>';
+    container.innerHTML = html;
+
+    totalsTable.style.display = '';
+    document.getElementById('qt-count').textContent = count;
+    document.getElementById('qt-hours').textContent = totalHours.toLocaleString() + ' hrs';
+    document.getElementById('qt-rate').textContent = '$' + rate.toLocaleString() + ' / hr';
+    document.getElementById('qt-total').textContent = fmtCurrency(total);
+  }
+
+  function sizeBgColor(size) {
+    return { S:'#00B493', M:'#0057B8', L:'#7B3FE4', XL:'#D9500A', C:'#5A6478' }[size] || '#9AA3B2';
+  }
+
+  // ── Render SOW ──
+  function renderSOW() {
+    const selected = [...document.querySelectorAll('.service-row.selected')];
+    const rate  = parseFloat(document.getElementById('hourly-rate').value) || 0;
+    const count = selected.length;
+    let totalHours = 0;
+    selected.forEach(r => totalHours += getServiceHours(r));
+    const total = totalHours * rate;
+
+    // Populate header fields from Quote form
+    const v = id => (document.getElementById(id) || {}).value || '';
+    document.getElementById('sow-number').textContent        = ('SOW-' + (v('f-quotenum') || new Date().getFullYear() + '-001')).replace(/^SOW-Q-/, 'SOW-');
+    document.getElementById('sow-date').textContent          = new Date().toLocaleDateString('en-US', {year:'numeric',month:'long',day:'numeric'});
+    document.getElementById('sow-company').textContent       = v('f-company')        || '—';
+    document.getElementById('sow-contact-name').textContent  = v('f-contact')        || '—';
+    document.getElementById('sow-contact-title').textContent = v('f-title')          || '';
+    document.getElementById('sow-contact-email').textContent = v('f-email')          || '';
+    document.getElementById('sow-contact-phone').textContent = v('f-phone')          || '';
+    document.getElementById('sow-contact-address').textContent = v('f-address')      || '';
+    document.getElementById('sow-partner').textContent        = v('f-preparedby')    || '—';
+    document.getElementById('sow-partner-contact').textContent= v('f-partnercontact')|| '—';
+
+    const sectionMap = {
+      '1': { name: '1. Pre-Alkira Implementation Services', rows: [] },
+      '2': { name: '2. Backbone-as-a-Service (BaaS)',       rows: [] },
+      '3': { name: '3. Multi-Cloud Networking (MCN)',        rows: [] },
+      '4': { name: '4. Network & Security Insertion',        rows: [] },
+      '5': { name: '5. M&A / B2B Extranet',                 rows: [] },
+    };
+    selected.forEach(row => {
+      const sec = row.dataset.id.split('.')[0];
+      if (sectionMap[sec]) sectionMap[sec].rows.push(row);
+    });
+
+    // Section 1: Executive Summary
+    const companyName = v('f-company') || 'the Customer';
+    let html = `
+      <div class="sow-section">
+        <div class="sow-section-title"><span class="sow-section-num">1</span>Executive Summary</div>
+        <p class="sow-prose">This Statement of Work (SOW) defines the professional services to be delivered by the Service Provider to <strong>${escHtml(companyName)}</strong> in connection with the implementation of Alkira's Network Infrastructure as a Service (NIaaS) platform. The objective of this engagement is to accelerate time-to-value, reduce deployment risk, and modernize the customer's network and security architecture across cloud and on-premises environments.</p>
+        <p class="sow-prose" style="margin-top:10px;">This SOW encompasses ${count} professional service${count !== 1 ? 's' : ''} totaling <strong>${totalHours.toLocaleString()} hours</strong> at an estimated total investment of <strong>${fmtCurrency(total)}</strong>.</p>
+      </div>`;
+
+    // Section 2: Scope of Work
+    html += `<div class="sow-section"><div class="sow-section-title"><span class="sow-section-num">2</span>Scope of Work</div>`;
+
+    if (count === 0) {
+      html += `<div class="no-services-msg" style="padding:30px;text-align:center;color:var(--gray-400);">No services selected — go back to the Calculator tab.</div>`;
+    } else {
+      Object.entries(sectionMap).forEach(([secNum, sec]) => {
+        if (sec.rows.length === 0) return;
+        html += `<div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);margin:18px 0 8px;">${sec.name}</div>`;
+        sec.rows.forEach(row => {
+          const size = row.dataset.size || 'S';
+          const hrs  = getServiceHours(row);
+          const delivs = DELIVERABLES[row.dataset.id] || ['Deliverables to be defined during project kickoff'];
+          const sizeLabel = SIZE_LABEL[size] || size;
+          html += `
+            <div class="sow-service-block">
+              <div class="sow-service-header">
+                <span class="sow-service-id">${row.dataset.id}</span>
+                <span class="sow-service-name">${escHtml(row.dataset.name)}</span>
+                <span class="sow-size-badge" style="background:${sizeBgColor(size)}">${sizeLabel}</span>
+                <span class="sow-hours-badge">${hrs} hrs</span>
+              </div>
+              <div class="sow-service-body">
+                <div class="sow-service-desc">${escHtml(row.dataset.desc)}</div>
+                <div class="sow-deliverables-title">Deliverables</div>
+                <ul class="sow-deliverables">${delivs.map(d => `<li>${escHtml(d)}</li>`).join('')}</ul>
+              </div>
+            </div>`;
+        });
+      });
+    }
+    html += `</div>`;
+
+    // Section 3: Engagement Terms
+    html += `
+      <div class="sow-section">
+        <div class="sow-section-title"><span class="sow-section-num">3</span>Engagement Terms</div>
+        <table class="sow-terms-table">
+          <tr><td>Engagement Type</td><td>Time &amp; Materials</td></tr>
+          <tr><td>Total Services</td><td>${count} service${count !== 1 ? 's' : ''}</td></tr>
+          <tr><td>Total Estimated Hours</td><td>${totalHours.toLocaleString()} hours</td></tr>
+          <tr><td>Hourly Rate</td><td>${fmtCurrency(rate)} / hour</td></tr>
+          <tr><td>Payment Terms</td><td>Net 30 from invoice date</td></tr>
+          <tr><td>Quote / SOW Reference</td><td>${escHtml(v('f-quotenum') || '—')}</td></tr>
+          <tr class="sow-grand-total"><td>Total Estimated Investment</td><td>${fmtCurrency(total)}</td></tr>
+        </table>
+      </div>`;
+
+    // Section 4: Assumptions & Dependencies
+    html += `
+      <div class="sow-section">
+        <div class="sow-section-title"><span class="sow-section-num">4</span>Assumptions &amp; Dependencies</div>
+        <ul class="sow-assumptions">
+          <li>Customer will provide timely access to relevant network documentation, architecture diagrams, and key stakeholders.</li>
+          <li>Customer will designate a primary point of contact and a project sponsor for the duration of the engagement.</li>
+          <li>Customer has or will procure the necessary Alkira platform licenses prior to the start of implementation services.</li>
+          <li>Cloud provider accounts (AWS, Azure, GCP) will be provisioned and accessible by the project start date.</li>
+          <li>Any out-of-scope work identified during the engagement will be addressed via a written Change Order prior to execution.</li>
+          <li>Travel expenses, if required, will be billed separately at cost and require prior written approval.</li>
+          <li>Estimated hours are based on standard complexity. Significant deviations in scope may require a revised SOW.</li>
+        </ul>
+      </div>`;
+
+    // Section 5: Acceptance & Signatures
+    html += `
+      <div class="sow-section">
+        <div class="sow-section-title"><span class="sow-section-num">5</span>Acceptance &amp; Signatures</div>
+        <p class="sow-prose" style="margin-bottom:20px;">By signing below, both parties agree to the terms and scope defined in this Statement of Work. This SOW is subject to the Master Services Agreement or equivalent agreement between the parties.</p>
+        <div class="sow-sig-grid">
+          <div class="sow-sig-block">
+            <div class="sow-sig-role">Customer Authorization</div>
+            <div class="sow-sig-line"></div><div class="sow-sig-label">Signature</div>
+            <div class="sow-sig-line" style="margin-top:24px"></div><div class="sow-sig-label">Printed Name &amp; Title</div>
+            <div class="sow-sig-line" style="margin-top:24px"></div><div class="sow-sig-label">Date</div>
+          </div>
+          <div class="sow-sig-block">
+            <div class="sow-sig-role">Service Provider Authorization</div>
+            <div class="sow-sig-line"></div><div class="sow-sig-label">Signature</div>
+            <div class="sow-sig-line" style="margin-top:24px"></div><div class="sow-sig-label">Printed Name &amp; Title</div>
+            <div class="sow-sig-line" style="margin-top:24px"></div><div class="sow-sig-label">Date</div>
+          </div>
+        </div>
+      </div>`;
+
+    document.getElementById('sow-body-content').innerHTML = html;
+  }
+
+  // ── SOW Logo upload ──
+  function handleSowLogoUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.getElementById('sow-logo-preview');
+      const box = document.getElementById('sow-logo-box');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      box.querySelector('.logo-upload-icon').style.display = 'none';
+      box.querySelector('.logo-upload-text').style.display = 'none';
+      box.style.border = 'none';
+      box.style.background = 'transparent';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ── Logo upload ──
+  function handleLogoUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = document.getElementById('logo-preview');
+      const box = document.getElementById('logo-box');
+      img.src = e.target.result;
+      img.style.display = 'block';
+      box.querySelector('.logo-upload-icon').style.display = 'none';
+      box.querySelector('.logo-upload-text').style.display = 'none';
+      box.style.border = 'none';
+      box.style.background = 'transparent';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // ── Clear all ──
+  function clearAll() {
+    document.querySelectorAll('.service-row.selected').forEach(r => r.classList.remove('selected'));
+    updateSummary();
+  }
+
+  // ── Helpers ──
+  function fmtCurrency(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  }
+  function escHtml(s) {
+    return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Init
+  updateSummary();
+</script>
+</body>
+</html>
