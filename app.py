@@ -19,6 +19,7 @@ ALKIRA_BLUE = "#0057B8"
 ALKIRA_DARK = "#003A7D"
 ALKIRA_ACCENT = "#00A3E0"
 ALKIRA_GREEN = "#00B493"
+ALKIRA_LIGHT_RGBA = "rgba(0,87,184,.15)"
 PURPLE = "#7B3FE4"
 ORANGE = "#D9500A"
 GRAY_400 = "#9AA3B2"
@@ -482,7 +483,7 @@ table.ps-table td.center {{ text-align: center; }}
 .sig-line {{ border-bottom: 1.5px solid {GRAY_400}; height: 28px; margin-bottom: 4px; }}
 .sig-label {{ font-size: 11px; color: {GRAY_600}; }}
 </style>
-""".replace("{ALKIRA_LIGHT_RGBA}", "rgba(0,87,184,.15)")
+"""
 
 st.markdown(CSS, unsafe_allow_html=True)
 
